@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Messenger Desktop Settings</title>
+    <script type="module" src="/src/settings.ts"></script>
+  </head>
+  <body>
+    <main class="settings-shell">
+      <header>
+        <p class="eyebrow">Messenger Desktop</p>
+        <h1>Settings</h1>
+      </header>
+
+      <form id="settings-form" class="settings-form">
+        <label class="setting-row">
+          <span>
+            <strong>Start on login</strong>
+            <small>Launch Messenger Desktop when Windows starts.</small>
+          </span>
+          <input id="start-on-login" name="start_on_login" type="checkbox" />
+        </label>
+
+        <label class="setting-row">
+          <span>
+            <strong>Close to tray</strong>
+            <small>Hide the window instead of quitting when closing it.</small>
+          </span>
+          <input id="close-to-tray" name="close_to_tray" type="checkbox" />
+        </label>
+
+        <label class="setting-row">
+          <span>
+            <strong>Start minimized</strong>
+            <small>Keep Messenger hidden in the tray after startup.</small>
+          </span>
+          <input id="start-minimized" name="start_minimized" type="checkbox" />
+        </label>
+
+        <label class="field-row">
+          <span>
+            <strong>Messenger URL</strong>
+            <small>Use the standard Messenger web app unless you need a fallback.</small>
+          </span>
+          <select id="messenger-url" name="messenger_url">
+            <option value="https://www.messenger.com">messenger.com</option>
+            <option value="https://www.facebook.com/messages">facebook.com/messages</option>
+          </select>
+        </label>
+
+        <label class="field-row">
+          <span>
+            <strong>Quick hide shortcut</strong>
+            <small>The MVP registers Ctrl+Shift+M.</small>
+          </span>
+          <input id="shortcut" name="shortcut" type="text" value="Ctrl+Shift+M" readonly />
+        </label>
+
+        <footer>
+          <button type="submit">Save</button>
+          <p id="status" role="status" aria-live="polite"></p>
+        </footer>
+      </form>
+    </main>
+  </body>
+</html>
