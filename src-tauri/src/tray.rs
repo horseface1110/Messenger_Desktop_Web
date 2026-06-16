@@ -69,11 +69,17 @@ fn open_settings(app: &tauri::AppHandle) {
         return;
     }
 
-    let _ = WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
+    let window = WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
         .title("Messenger Desktop Settings")
         .inner_size(720.0, 640.0)
         .min_inner_size(420.0, 520.0)
         .resizable(true)
         .center()
         .build();
+
+    if window.is_ok() {
+        if let Ok(settings) = crate::settings::read_settings(app) {
+            crate::theme::apply_theme(app, &settings);
+        }
+    }
 }

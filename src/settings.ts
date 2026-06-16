@@ -6,6 +6,7 @@ type Settings = {
   start_on_login: boolean;
   close_to_tray: boolean;
   start_minimized: boolean;
+  theme: "system" | "light" | "dark";
   shortcut: string;
   messenger_url: string;
 };
@@ -25,6 +26,7 @@ const status = requireElement<HTMLElement>("#status");
 const startOnLogin = requireElement<HTMLInputElement>("#start-on-login");
 const closeToTray = requireElement<HTMLInputElement>("#close-to-tray");
 const startMinimized = requireElement<HTMLInputElement>("#start-minimized");
+const theme = requireElement<HTMLSelectElement>("#theme");
 const shortcut = requireElement<HTMLInputElement>("#shortcut");
 const messengerUrl = requireElement<HTMLSelectElement>("#messenger-url");
 
@@ -32,8 +34,10 @@ function render(settings: Settings) {
   startOnLogin.checked = settings.start_on_login;
   closeToTray.checked = settings.close_to_tray;
   startMinimized.checked = settings.start_minimized;
+  theme.value = settings.theme ?? "system";
   shortcut.value = settings.shortcut;
   messengerUrl.value = settings.messenger_url;
+  applySettingsTheme(settings.theme ?? "system");
 }
 
 function collect(): Settings {
@@ -41,9 +45,14 @@ function collect(): Settings {
     start_on_login: startOnLogin.checked,
     close_to_tray: closeToTray.checked,
     start_minimized: startMinimized.checked,
+    theme: theme.value as Settings["theme"],
     shortcut: shortcut.value,
     messenger_url: messengerUrl.value,
   };
+}
+
+function applySettingsTheme(mode: Settings["theme"]) {
+  document.documentElement.dataset.theme = mode;
 }
 
 async function loadSettings() {
@@ -57,6 +66,7 @@ form.addEventListener("submit", async (event) => {
   status.textContent = "Saving...";
 
   const settings = collect();
+  applySettingsTheme(settings.theme);
   await invoke("save_settings", { settings });
 
   if (settings.start_on_login) {

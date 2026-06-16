@@ -1,5 +1,6 @@
 mod settings;
 mod shortcuts;
+mod theme;
 mod tray;
 
 use tauri::{Manager, WindowEvent};
@@ -20,7 +21,10 @@ fn main() {
             tray::setup(app)?;
             shortcuts::setup(app)?;
 
-            if settings::read_settings(app.handle())?.start_minimized {
+            let settings = settings::read_settings(app.handle())?;
+            theme::apply_theme(app.handle(), &settings);
+
+            if settings.start_minimized {
                 if let Some(window) = app.get_webview_window("main") {
                     let _ = window.hide();
                 }

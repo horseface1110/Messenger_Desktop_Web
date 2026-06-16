@@ -26,6 +26,8 @@ pub struct Settings {
     pub start_on_login: bool,
     pub close_to_tray: bool,
     pub start_minimized: bool,
+    #[serde(default = "default_theme")]
+    pub theme: String,
     pub shortcut: String,
     pub messenger_url: String,
 }
@@ -36,6 +38,7 @@ impl Default for Settings {
             start_on_login: false,
             close_to_tray: true,
             start_minimized: false,
+            theme: default_theme(),
             shortcut: "Ctrl+Shift+M".to_string(),
             messenger_url: "https://www.messenger.com".to_string(),
         }
@@ -49,7 +52,9 @@ pub fn get_settings(app: AppHandle) -> Result<Settings, SettingsError> {
 
 #[tauri::command]
 pub fn save_settings(app: AppHandle, settings: Settings) -> Result<(), SettingsError> {
-    write_settings(&app, &settings)
+    write_settings(&app, &settings)?;
+    crate::theme::apply_theme(&app, &settings);
+    Ok(())
 }
 
 pub fn read_settings(app: &AppHandle) -> Result<Settings, SettingsError> {
@@ -77,4 +82,8 @@ pub fn write_settings(app: &AppHandle, settings: &Settings) -> Result<(), Settin
 fn settings_path(app: &AppHandle) -> Result<PathBuf, SettingsError> {
     let config_dir = app.path().app_config_dir().map_err(|_| SettingsError::ConfigDir)?;
     Ok(config_dir.join("settings.json"))
+}
+
+fn default_theme() -> String {
+    "system".to_string()
 }
